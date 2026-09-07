@@ -1,3 +1,24 @@
+// ==========================================
+// RHINO 3DM CAD ENGINE
+// ==========================================
+
+let rhino = null;
+
+async function initializeRhino() {
+  try {
+    rhino = await rhino3dm();
+    console.log("Rhino3dm ready");
+  } catch (error) {
+    console.error("Rhino3dm failed to load:", error);
+  }
+}
+
+initializeRhino();
+
+
+// ==========================================
+// EXISTING CATALOGUE APP
+// ==========================================
 const toast = document.getElementById('toast');
 function message(text){ toast.textContent=text; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),3200); }
 const categoryConfig = {
