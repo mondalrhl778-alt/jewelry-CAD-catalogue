@@ -14,6 +14,11 @@
   id="cadFile"
   accept=".3dm,.step,.stp,.iges,.igs,.stl,.obj,.glb,.dxf,.png,.jpg,.jpeg,.webp"
 />
+  <div id="cadAnalysis" class="cad-analysis">
+  <p>Upload a CAD file to inspect the model.</p>
+</div>
+
+<div id="cadViewer"></div>
 <body>
   <aside class="sidebar">
     <div class="brand"><span class="brand-mark">A</span><span>atelier<span>cad</span></span></div>
@@ -65,5 +70,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/rhino3dm@8.32.2/rhino3dm.min.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
