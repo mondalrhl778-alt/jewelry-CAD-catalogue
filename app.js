@@ -32,7 +32,8 @@ category.addEventListener('change',()=>{setCategory();message(`${category.option
 productType.addEventListener('change',()=>{dimensionHeading.textContent = `${productType.value} dimensions`;updateSheet();});
 document.getElementById('sku').addEventListener('input',updateSheet);
 setCategory();
-document.getElementById('cadFile').addEventListener('change', e=>{const f=e.target.files[0];if(!f)return;document.getElementById('fileName').textContent=f.name;document.getElementById('fileInfo').textContent=`${(f.size/1024/1024).toFixed(1)} MB · source uploaded`;message('Source geometry added and ready for validation.');});
+let selectedCadFile=null;
+document.getElementById('cadFile').addEventListener('change', e=>{const f=e.target.files[0];if(!f)return;selectedCadFile=f;document.getElementById('fileName').textContent=f.name;document.getElementById('fileInfo').textContent=`${(f.size/1024/1024).toFixed(1)} MB · source uploaded`;message('Source geometry added and ready for validation.');});
 function readImage(file){
   return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file);});
 }
@@ -52,6 +53,42 @@ document.getElementById('renderFiles').addEventListener('change',async event=>{
   const required=['hero','front','side'].filter(name=>!images[name]);
   if(required.length) message(`Render pack loaded with missing files: ${required.join(', ')}.`);
   else message('Blender render pack loaded into the catalogue sheet.');
+});
+async function loadRemoteRenderPack(images){
+  const loaded={};
+  for(const [name,url] of Object.entries(images)){
+    const response=await fetch(url,{cache:'no-store'});
+    if(!response.ok)throw new Error(`Could not load ${name}.png from the local engine.`);
+    loaded[name]=await readImage(await response.blob());
+  }
+  document.getElementById('heroRender').src=loaded.hero;
+  document.getElementById('productArea').classList.add('has-render');
+  for(const view of ['front','side','back']){
+    document.getElementById(`${view}Render`).src=loaded[view];
+    document.getElementById(`${view}View`).classList.add('has-render');
+  }
+}
+document.getElementById('localRenderBtn').addEventListener('click',async()=>{
+  if(!selectedCadFile){message('Choose a CAD file first.');return;}
+  const button=document.getElementById('localRenderBtn');
+  const original=button.textContent;
+  button.disabled=true;
+  button.textContent='Rendering in Blender…';
+  try{
+    const form=new FormData();
+    form.append('cad',selectedCadFile,selectedCadFile.name);
+    form.append('metal',document.getElementById('metal').value);
+    const response=await fetch('http://127.0.0.1:8765/render',{method:'POST',body:form});
+    const result=await response.json();
+    if(!response.ok)throw new Error(result.error||'Local rendering failed.');
+    await loadRemoteRenderPack(result.images);
+    message('CAD rendered and inserted into the catalogue sheet.');
+  }catch(error){
+    message(error.message.includes('fetch')?'Start the Atelier local engine, then try again.':error.message);
+  }finally{
+    button.disabled=false;
+    button.textContent=original;
+  }
 });
 function fileName(extension){ return `${document.getElementById('sku').value.trim().replace(/[^a-z0-9_-]/gi,'-') || 'catalogue-sheet'}-catalogue.${extension}`; }
 async function captureSheet(){
