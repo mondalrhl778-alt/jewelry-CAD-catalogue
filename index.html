@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atelier CAD — Catalogue Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark">A</span><span>atelier<span>cad</span></span></div>
+    <nav>
+      <a class="nav-item active" href="#studio"><span>✦</span> Catalogue studio</a>
+      <a class="nav-item" href="#library"><span>▦</span> Product library</a>
+      <a class="nav-item" href="#batches"><span>◫</span> Batch runs <b>12</b></a>
+      <a class="nav-item" href="#templates"><span>□</span> Templates</a>
+    </nav>
+    <div class="sidebar-bottom"><a class="nav-item" href="#settings"><span>⚙</span> Settings</a><div class="profile"><div class="avatar">JM</div><div><strong>Jewel Made</strong><small>Production workspace</small></div><span>⌄</span></div></div>
+  </aside>
+
+  <main>
+    <header><div><p class="eyebrow">Catalogue studio / new product</p><h1>Build a product sheet</h1></div><div class="header-actions"><button class="text-button">Save draft</button><button class="secondary" id="exportBtn">Export sheet <span>↓</span></button></div></header>
+    <div class="progress-line"><span class="complete">1</span><i></i><span class="complete">2</span><i></i><span class="current">3</span><i></i><span>4</span><label>Source</label><label>Details</label><label>Generate</label><label>Export</label></div>
+
+    <section class="workspace" id="studio">
+      <div class="controls">
+        <section class="panel source-panel"><div class="section-head"><div><p class="eyebrow">01 / source geometry</p><h2>CAD reference</h2></div><span class="verified">● Geometry locked</span></div>
+          <label class="dropzone" id="dropzone" for="cadFile"><input id="cadFile" type="file" accept=".png,.jpg,.jpeg,.webp,.svg,.dxf,.step,.stp,.3dm" hidden><div class="upload-icon">↑</div><strong>Drop CAD image or model here</strong><span>PNG, JPG, SVG, DXF, STEP or 3DM · up to 50 MB</span><em>Browse files</em></label>
+          <div class="file-row"><div class="file-icon">◇</div><div><strong id="fileName">Pendant_214_CAD.png</strong><small id="fileInfo">2.8 MB · technical drawing</small></div><span class="pass">Ready</span><button class="icon-btn" aria-label="Remove file">×</button></div>
+          <div class="geometry-note"><span>◎</span><div><strong>Accuracy mode is on</strong><p>CAD silhouettes and setting locations are used as locked constraints. The image model may only improve material, lighting and background.</p></div></div>
+        </section>
+
+        <section class="panel"><div class="section-head"><div><p class="eyebrow">02 / product information</p><h2>Specifications</h2></div><button class="text-button">Import CSV</button></div>
+          <div class="field-grid"><label>SKU<input id="sku" value="PEN-214" /></label><label>Category<select id="category"><option value="neckwear">Neckwear</option><option value="rings">Rings</option><option value="earrings">Earrings</option><option value="wristwear">Wristwear</option></select></label><label>Product type<select id="productType" aria-label="Product type"></select><small class="field-help">Options follow the selected category</small></label><label>Metal<select><option>925 Sterling Silver</option><option>14K Yellow Gold</option><option>14K Rose Gold</option></select></label><label>Finish<select><option>High polish</option><option>Brushed</option><option>Rhodium plated</option></select></label></div>
+          <div class="divider"></div>
+          <div class="section-minihead"><strong>Stones</strong><button class="add-button">+ Add stone group</button></div>
+          <div class="stone-row"><span class="stone-dot"></span><select><option>Natural diamond</option><option>Lab-grown diamond</option><option>Moissanite</option></select><input aria-label="Cut" value="Round brilliant" /><input aria-label="Count" value="18 pcs" /><input aria-label="Total weight" value="0.42 ct" /></div>
+          <div class="divider"></div>
+          <div class="dimensions"><div class="section-minihead"><strong id="dimensionHeading">Pendant dimensions</strong><span class="unit">mm</span></div><div class="field-grid three" id="dimensionFields"><label>Height<input value="22.4" /></label><label>Width<input value="13.8" /></label><label>Depth<input value="4.6" /></label></div><label class="wide-field">Approx. metal weight <div class="with-unit"><input value="3.15" /><span>g</span></div></label></div>
+        </section>
+
+        <section class="panel output-options"><div class="section-head"><div><p class="eyebrow">03 / output rules</p><h2>Generation settings</h2></div></div><div class="toggle-row"><div><strong>Technical drawing precision</strong><small>Trace CAD vectors for front, side and back views</small></div><label class="switch"><input checked type="checkbox"><span></span></label></div><div class="toggle-row"><div><strong>Editable vector output</strong><small>Include SVG / DXF dimensions and annotations</small></div><label class="switch"><input checked type="checkbox"><span></span></label></div><div class="toggle-row"><div><strong>Catalog render</strong><small>Generate a photorealistic top product render</small></div><label class="switch"><input checked type="checkbox"><span></span></label></div></section>
+      </div>
+
+      <div class="preview-col"><div class="preview-toolbar"><div><span class="eyebrow">Live sheet preview</span><span class="tiny-status"><i></i> Ready to generate</span></div><div><button class="zoom active">Fit</button><button class="zoom">100%</button><button class="zoom">⌄</button></div></div>
+        <article class="catalogue-sheet" id="catalogueSheet">
+          <div class="sheet-topline"><span>JEWEL MADE / 2026</span><strong id="sheetSku">PEN-214</strong></div>
+          <div class="product-area"><div class="product-halo"></div><div class="chain left-chain"></div><div class="chain right-chain"></div><div class="bail"></div><div class="pendant"><div class="pendant-inner"></div><div class="stone s1"></div><div class="stone s2"></div><div class="stone s3"></div><div class="stone s4"></div><div class="stone s5"></div><div class="stone s6"></div><div class="stone s7"></div><div class="stone s8"></div></div><div class="render-label">POLISHED STERLING SILVER / DIAMOND</div></div>
+          <div class="sheet-bottom"><div class="technical"><div class="tech-title">TECHNICAL VIEWS <span>1:1 SCALE</span></div><div class="views"><div><div class="view front"><div class="diagram-pendant"></div><div class="dim v">22.4</div><div class="dim h">13.8</div></div><small>FRONT</small></div><div><div class="view side"><div class="side-shape"></div><div class="dim h">4.6</div></div><small>SIDE</small></div><div><div class="view back"><div class="back-shape"></div><div class="back-loop"></div></div><small>BACK</small></div></div></div><div class="spec-panel"><p>PRODUCT SPECIFICATION</p><h3 id="sheetProductTitle">Pendant / PEN-214</h3><dl><dt>METAL</dt><dd>925 STERLING SILVER</dd><dt>FINISH</dt><dd>HIGH POLISH</dd><dt>STONES</dt><dd>18 ROUND BRILLIANT DIAMONDS</dd><dt>TOTAL WEIGHT</dt><dd>0.42 CT</dd><dt>METAL WEIGHT</dt><dd>APPROX. 3.15 G</dd></dl><div class="spec-footer" id="sheetDimensions">HEIGHT: 22.4 MM · WIDTH: 13.8 MM · DEPTH: 4.6 MM</div></div></div>
+        </article>
+        <div class="generate-wrap"><button class="generate-button" id="generateBtn"><span>✦</span> Generate catalogue sheet</button><p>Creates a 4K catalogue render, SVG technical pack and print-ready PDF.</p></div>
+      </div>
+    </section>
+    <section class="strategy" id="templates"><div><p class="eyebrow">Production blueprint</p><h2>Reliable geometry first.<br>Generative polish second.</h2></div><div class="strategy-grid"><div><span>01</span><h3>Ingest & normalize</h3><p>Raster CAD is deskewed and vectorized. Native DXF, STEP and 3DM flow through a CAD renderer to create canonical camera views.</p></div><div><span>02</span><h3>Lock the design</h3><p>Save a geometry manifest: silhouette, stone centres, prongs, hole paths and measured bounds. It becomes the non-negotiable render constraint.</p></div><div><span>03</span><h3>Compose & export</h3><p>Use the generated hero render with deterministic SVG views and a template engine for editable PDFs, SVGs and batch SKU jobs.</p></div></div></section>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
