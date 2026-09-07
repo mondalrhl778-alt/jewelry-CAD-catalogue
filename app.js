@@ -33,5 +33,39 @@ productType.addEventListener('change',()=>{dimensionHeading.textContent = `${pro
 document.getElementById('sku').addEventListener('input',updateSheet);
 setCategory();
 document.getElementById('cadFile').addEventListener('change', e=>{const f=e.target.files[0];if(!f)return;document.getElementById('fileName').textContent=f.name;document.getElementById('fileInfo').textContent=`${(f.size/1024/1024).toFixed(1)} MB · source uploaded`;message('Source geometry added and ready for validation.');});
-document.getElementById('generateBtn').addEventListener('click',()=>{const btn=document.getElementById('generateBtn');btn.innerHTML='<span>◌</span> Validating locked geometry…';btn.disabled=true;setTimeout(()=>{btn.innerHTML='<span>✓</span> Catalogue sheet generated';message('Preview generated. The production pipeline will also package SVG, PDF and source manifest.');},1100);});
-document.getElementById('exportBtn').addEventListener('click',()=>message('Export package queued: print PDF, SVG technical pack and 4K PNG.'));
+function fileName(extension){ return `${document.getElementById('sku').value.trim().replace(/[^a-z0-9_-]/gi,'-') || 'catalogue-sheet'}-catalogue.${extension}`; }
+async function captureSheet(){
+  if (!window.html2canvas) throw new Error('The export library did not load. Check your internet connection and refresh the page.');
+  return window.html2canvas(document.getElementById('catalogueSheet'), { backgroundColor:'#ffffff', scale:4, useCORS:true, logging:false });
+}
+async function exportSheet(format){
+  const button = format === 'png' ? document.getElementById('generateBtn') : document.getElementById('exportBtn');
+  const original = button.innerHTML;
+  button.disabled = true;
+  button.innerHTML = '<span>◌</span> Preparing download…';
+  try {
+    const canvas = await captureSheet();
+    const image = canvas.toDataURL('image/png');
+    if (format === 'png') {
+      const link = document.createElement('a');
+      link.href = image;
+      link.download = fileName('png');
+      link.click();
+      message('Catalogue PNG downloaded.');
+    } else {
+      if (!window.jspdf) throw new Error('The PDF library did not load. Check your internet connection and refresh the page.');
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({ orientation:'portrait', unit:'px', format:[canvas.width, canvas.height], hotfixes:['px_scaling'] });
+      pdf.addImage(image, 'PNG', 0, 0, canvas.width, canvas.height);
+      pdf.save(fileName('pdf'));
+      message('Print-ready catalogue PDF downloaded.');
+    }
+  } catch (error) {
+    message(error.message || 'The export could not be created.');
+  } finally {
+    button.disabled = false;
+    button.innerHTML = original;
+  }
+}
+document.getElementById('generateBtn').addEventListener('click',()=>exportSheet('png'));
+document.getElementById('exportBtn').addEventListener('click',()=>exportSheet('pdf'));
